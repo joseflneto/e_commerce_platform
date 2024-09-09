@@ -253,6 +253,42 @@ def add_product():
     return jsonify({'message': 'Product added successfully'}), 201
 
 
+@app.route('/edit_product', methods=['POST'])
+def edit_product():
+    if 'username' not in session or session['username'] != 'admin':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    data = request.json
+    product_id = data.get('product_id')
+    name = data.get('name')
+    price = data.get('price')
+    
+    if not product_id or not name or not price:
+        return jsonify({'error': 'Product ID, name, and price are required'}), 400
+    
+    products = load_data(PRODUCTS_FILE)
+    
+    # Verificar se products é uma lista
+    if not isinstance(products, list):
+        return jsonify({'error': 'Product list is corrupted'}), 500
+    
+    # Encontrar o produto a ser editado
+    product_found = False
+    for product in products:
+        if product['id'] == product_id:
+            product['name'] = name
+            product['price'] = price
+            product_found = True
+            break
+    
+    if not product_found:
+        return jsonify({'error': 'Product not found'}), 404
+    
+    save_data(PRODUCTS_FILE, products)
+    return jsonify({'message': 'Product updated successfully'}), 200
+
+
+
 
 
 @app.route('/remove_product', methods=['POST'])

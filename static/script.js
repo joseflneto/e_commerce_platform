@@ -69,3 +69,21 @@ document.getElementById('removeProductForm')?.addEventListener('submit', async (
     const result = await response.json();
     alert(result.message || result.error);
 });
+
+
+document.getElementById('editProductForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const productId = document.getElementById('editProductId').value;
+    const productName = document.getElementById('editProductName').value;
+    const productPrice = document.getElementById('editProductPrice').value;
+
+    const response = await fetch('/edit_product', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({product_id: productId, name: productName, price: productPrice})
+    });
+
+    const result = await response.json();
+    alert(result.message || result.error);
+});
+
