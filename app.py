@@ -79,6 +79,10 @@ def clear_all_files():
     open(CARTS_FILE, 'w').close()
     open(ORDERS_FILE, 'w').close()
 
+# Função para carregar os dados dos produtos do arquivo JSON
+
+
+
 # Rotas
 
 @app.route('/')
@@ -86,6 +90,17 @@ def index():
     logged_in = 'username' in session
     username = session.get('username')
     return render_template('index.html', logged_in=logged_in, username=username)
+
+
+# Rota para os detalhes do produto
+@app.route('/product/<product_id>')
+def product_detail(product_id):
+    products = get_products()
+    product = next((p for p in products if p['id'] == product_id), None)
+    if product:
+        return render_template('product_detail.html', product=product)
+    else:
+        return "Product not found", 404
 
 
 @app.route('/register', methods=['GET', 'POST'])
