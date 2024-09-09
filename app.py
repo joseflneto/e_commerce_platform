@@ -71,6 +71,7 @@ def place_order(username):
 def get_products():
     return load_data(PRODUCTS_FILE)
 
+
 # Função para limpar todos os arquivos JSON
 def clear_all_files():
     open(USERS_FILE, 'w').close()
@@ -231,25 +232,21 @@ def add_product():
     data = request.json
     name = data.get('name')
     price = data.get('price')
+    description = data.get('description', '')  # Novo campo
     
     if not name or not price:
         return jsonify({'error': 'Product name and price required'}), 400
     
     products = load_data(PRODUCTS_FILE)
     
-    # Certifique-se de que products é uma lista
     if not isinstance(products, list):
         products = []
     
-    # Gerar um novo ID
     new_id = str(len(products) + 1)
-    
-    # Adicionar o novo produto
-    new_product = {'id': new_id, 'name': name, 'price': price}
+    new_product = {'id': new_id, 'name': name, 'price': price, 'description': description}
     products.append(new_product)
     
     save_data(PRODUCTS_FILE, products)
-    
     return jsonify({'message': 'Product added successfully'}), 201
 
 
@@ -262,22 +259,22 @@ def edit_product():
     product_id = data.get('product_id')
     name = data.get('name')
     price = data.get('price')
+    description = data.get('description')  # Novo campo
     
     if not product_id or not name or not price:
         return jsonify({'error': 'Product ID, name, and price are required'}), 400
     
     products = load_data(PRODUCTS_FILE)
     
-    # Verificar se products é uma lista
     if not isinstance(products, list):
         return jsonify({'error': 'Product list is corrupted'}), 500
     
-    # Encontrar o produto a ser editado
     product_found = False
     for product in products:
         if product['id'] == product_id:
             product['name'] = name
             product['price'] = price
+            product['description'] = description  # Atualiza a descrição
             product_found = True
             break
     
@@ -286,7 +283,6 @@ def edit_product():
     
     save_data(PRODUCTS_FILE, products)
     return jsonify({'message': 'Product updated successfully'}), 200
-
 
 
 

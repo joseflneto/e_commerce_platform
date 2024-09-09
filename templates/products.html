@@ -25,7 +25,8 @@
         products.forEach(product => {
             const li = document.createElement('li');
             li.innerHTML = `
-                <strong>${product.name}</strong> - $${product.price}
+                <strong>${product.name}</strong> - $${product.price} (ID: ${product.id})<br>
+                <em>${product.description}</em>
                 <button onclick="addToCart('${product.id}')">Add to Cart</button>
             `;
             productList.appendChild(li);
