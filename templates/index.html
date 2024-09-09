@@ -7,23 +7,27 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Welcome to Our Shop</h1>
+    <header>
+        <h1>Welcome to Our Shop</h1>
+    </header>
     
-    {% if logged_in %}
-        <p>Logged in as: {{ username }}</p>
-        <form action="/logout" method="post">
-            <button type="submit">Logout</button>
-        </form>
-        
-        {% if username == 'admin' %}
-            <a href="/product">Manage Products</a>
+    <section>
+        {% if logged_in %}
+            <p>Logged in as: {{ username }}</p>
+            <form action="/logout" method="post">
+                <button type="submit">Logout</button>
+            </form>
+            
+            {% if username == 'admin' %}
+                <a href="/product">Manage Products</a>
+            {% endif %}
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
         {% endif %}
-    {% else %}
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-    {% endif %}
-    
-    <a href="/products">View Products</a>
-    <a href="/cart">View Cart</a>
+        
+        <a href="/products">View Products</a>
+        <a href="/cart">View Cart</a>
+    </section>
 </body>
 </html>

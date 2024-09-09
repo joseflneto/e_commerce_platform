@@ -7,23 +7,34 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <a href="/" class="back-to-home-button">Back to Home</a>
-    <h1>Your Cart</h1>
-    <ul>
-        {% for product in cart %}
-        <li>{{ product.name }} - ${{ product.price }}</li>
-        {% endfor %}
-    </ul>
+    <header>
+        <a href="/" class="back-to-home-button">Back to Home</a>
+        <h1>Your Cart</h1>
+    </header>
+    
+    <main>
+        <ul class="cart-items">
+            {% for product in cart %}
+            <li class="cart-item">
+                <span class="product-name">{{ product.name }}</span> - 
+                <span class="product-price">${{ product.price }}</span>
+            </li>
+            {% endfor %}
+        </ul>
 
-    <a href="/products">Continue Shopping</a>
+        <div class="cart-actions">
+            <a href="/products" class="continue-shopping-button">Continue Shopping</a>
 
-    <!-- Formulário para realizar o pedido -->
-    <form action="/place_order" method="post">
-        <input type="hidden" name="username" value="{{ username }}">
-        <button type="submit">Place Order</button>
-    </form>
+            <!-- Formulário para realizar o pedido -->
+            <form action="/place_order" method="post" class="place-order-form">
+                <input type="hidden" name="username" value="{{ username }}">
+                <button type="submit" class="place-order-button">Place Order</button>
+            </form>
 
-    <a href="/orders">View Your Orders</a>
+            <a href="/orders" class="view-orders-button">View Your Orders</a>
+        </div>
+    </main>
 
+    <script src="/static/script.js"></script>
 </body>
 </html>
