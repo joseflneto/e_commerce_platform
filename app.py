@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, session  # Import session
+from flask import Flask, request, jsonify, render_template, session, redirect
 import json
 import hashlib
 
@@ -76,7 +76,10 @@ def clear_all_files():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    logged_in = 'username' in session
+    username = session.get('username')
+    return render_template('index.html', logged_in=logged_in, username=username)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -96,6 +99,9 @@ def register():
             return jsonify({'error': 'Username and password required'}), 400
     return render_template('register.html')
 
+
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -109,10 +115,11 @@ def login():
             return jsonify({'error': 'Invalid credentials'}), 401
     return render_template('login.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout():
     session.pop('username', None)  # Remove o username da sessão ao fazer logout
-    return jsonify({'message': 'Logout successful'}), 200
+    return redirect('/')
+
 
 @app.route('/products', methods=['GET'])
 def products():
@@ -143,6 +150,8 @@ def cart():
     user_cart_products = [product_dict.get(pid, {}) for pid in user_cart]
     
     return render_template('cart.html', cart=user_cart_products, username=username)
+
+
 
 
 
@@ -197,6 +206,7 @@ def orders():
     user_orders = [order for order in orders.values() if order['username'] == username]
     
     return render_template('orders.html', orders=user_orders)
+
 
 
 if __name__ == '__main__':

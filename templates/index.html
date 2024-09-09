@@ -7,15 +7,19 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>Welcome to E-commerce</h1>
-    <nav>
-        <ul>
-            <li><a href="/register">Register</a></li>
-            <li><a href="/login">Login</a></li>
-            <li><a href="/products">Products</a></li>
-            <li><a href="/cart">Cart</a></li>
-            <li><a href="/place_order">Place Order</a></li>
-        </ul>
-    </nav>
+    <h1>Welcome to Our Shop</h1>
+    
+    {% if logged_in %}
+        <p>Logged in as: {{ username }}</p>
+        <form action="/logout" method="post">
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+    {% endif %}
+    
+    <a href="/products">View Products</a>
+    <a href="/cart">View Cart</a>
 </body>
 </html>
