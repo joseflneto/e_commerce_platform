@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Your Cart</h1>
+    <ul>
+        {% for product in cart %}
+        <li>{{ product.name }} - ${{ product.price }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="/products">Continue Shopping</a>
+
+    <!-- Formulário para realizar o pedido -->
+    <form action="/place_order" method="post">
+        <input type="hidden" name="username" value="{{ username }}">
+        <button type="submit">Place Order</button>
+    </form>
+
+    <a href="/orders">View Your Orders</a>
+
+</body>
+</html>
