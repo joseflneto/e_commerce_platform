@@ -13,6 +13,12 @@ PRODUCTS_FILE = 'products.json'
 CARTS_FILE = 'carts.json'
 ORDERS_FILE = 'orders.json'
 
+def create_default_admin():
+    users = load_data(USERS_FILE)
+    if 'admin' not in users:
+        users['admin'] = hash_password('admin')
+        save_data(USERS_FILE, users)
+
 # Funções auxiliares
 def load_data(file_path):
     try:
@@ -131,6 +137,14 @@ def products():
     return render_template('products.html', products=products, username=username)
 
 
+@app.route('/product', methods=['GET'])
+def product_page():
+    if 'username' not in session or session['username'] != 'admin':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    return render_template('product.html')
+
+
 
 @app.route('/cart', methods=['GET'])
 def cart():
@@ -209,5 +223,69 @@ def orders():
 
 
 
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    if 'username' not in session or session['username'] != 'admin':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    data = request.json
+    name = data.get('name')
+    price = data.get('price')
+    
+    if not name or not price:
+        return jsonify({'error': 'Product name and price required'}), 400
+    
+    products = load_data(PRODUCTS_FILE)
+    
+    # Certifique-se de que products é uma lista
+    if not isinstance(products, list):
+        products = []
+    
+    # Gerar um novo ID
+    new_id = str(len(products) + 1)
+    
+    # Adicionar o novo produto
+    new_product = {'id': new_id, 'name': name, 'price': price}
+    products.append(new_product)
+    
+    save_data(PRODUCTS_FILE, products)
+    
+    return jsonify({'message': 'Product added successfully'}), 201
+
+
+
+
+@app.route('/remove_product', methods=['POST'])
+def remove_product():
+    if 'username' not in session or session['username'] != 'admin':
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    data = request.json
+    product_id = data.get('product_id')
+    
+    if not product_id:
+        return jsonify({'error': 'Product ID required'}), 400
+    
+    products = load_data(PRODUCTS_FILE)
+    
+    # Verificar se products é uma lista
+    if not isinstance(products, list):
+        return jsonify({'error': 'Product list is corrupted'}), 500
+    
+    # Filtrar a lista para remover o produto com o ID correspondente
+    new_products = [product for product in products if product['id'] != product_id]
+    
+    # Verificar se algum produto foi removido
+    if len(new_products) == len(products):
+        return jsonify({'error': 'Product not found'}), 404
+    
+    save_data(PRODUCTS_FILE, new_products)
+    return jsonify({'message': 'Product removed successfully'}), 200
+
+
+
+
+
 if __name__ == '__main__':
+    create_default_admin() 
     app.run(port=8080, debug=True)

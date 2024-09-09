@@ -39,3 +39,33 @@ document.getElementById('placeOrderButton')?.addEventListener('click', async () 
     const result = await response.json();
     alert(result.order_id ? `Order placed with ID: ${result.order_id}` : result.error);
 });
+
+// Manipulador para adicionar novos produtos
+document.getElementById('addProductForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const productName = document.getElementById('productName').value;
+    const productPrice = document.getElementById('productPrice').value;
+
+    const response = await fetch('/add_product', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name: productName, price: productPrice})
+    });
+
+    const result = await response.json();
+    alert(result.message || result.error);
+});
+
+document.getElementById('removeProductForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const productId = document.getElementById('productId').value;
+
+    const response = await fetch('/remove_product', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({product_id: productId})
+    });
+
+    const result = await response.json();
+    alert(result.message || result.error);
+});
