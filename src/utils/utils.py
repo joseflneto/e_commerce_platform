@@ -1,5 +1,6 @@
 import json
 import hashlib
+import os
 
 USERS_FILE = 'data/users.json'
 PRODUCTS_FILE = 'data/products.json'
@@ -7,7 +8,13 @@ CARTS_FILE = 'data/carts.json'
 ORDERS_FILE = 'data/orders.json'
 
 def create_default_admin():
+
+    if not os.path.exists(USERS_FILE):
+        with open(USERS_FILE, 'w') as f:
+            json.dump({}, f)
+
     users = load_data(USERS_FILE)
+    
     if 'admin' not in users:
         users['admin'] = hash_password('admin')
         save_data(USERS_FILE, users)
