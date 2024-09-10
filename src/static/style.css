@@ -32,7 +32,7 @@ a:hover {
 }
 
 .cover-image {
-    background-image: url('../assets/bookshoptemplate.jpeg');
+    background-image: url('/assets/bookshoptemplate.jpeg');
     background-size: cover;
     background-position: center;
     width: 100%;

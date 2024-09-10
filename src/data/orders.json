@@ -20,5 +20,11 @@
         "products": [
             "3"
         ]
+    },
+    "4": {
+        "username": "admin",
+        "products": [
+            "2"
+        ]
     }
 }
