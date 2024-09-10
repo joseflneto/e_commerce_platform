@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="cover-image"></div>
+        <div class="overlay">
+            <h1>Welcome to My Book Shop</h1>
+        </div>
+    </header>
+    
+    
+    <section class="menu">
+        <div class="menu-left">
+            {% if logged_in %}
+                <a href="/products" class="menu-item">View Products</a>
+                <a href="/cart" class="menu-item">View Cart</a>
+            {% else %}
+                <a href="/login" class="menu-item">Login</a>
+                <a href="/register" class="menu-item">Register</a>
+            {% endif %}
+            {% if username == 'admin' %}
+                <a href="/product" class="menu-item">Manage Products</a>
+            {% endif %}
+        </div>
+        <div class="menu-right">
+            {% if logged_in %}
+                <p class="user-info">Logged in as: {{ username }}</p>
+                <form action="/logout" method="post" class="logout-form">
+                    <button type="submit">Logout</button>
+                </form>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>

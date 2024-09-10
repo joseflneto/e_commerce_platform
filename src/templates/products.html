@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <a href="/" class="back-to-home-button">Back to Home</a>
+    <h1>Products</h1>
+    <ul id="productList">
+        <!-- Os produtos serão carregados aqui via JavaScript -->
+    </ul>
+
+    <!-- Botão para ver o carrinho -->
+    <a href="/cart?username={{ username }}">Go to Cart</a>
+
+    <script>
+        // Carregar produtos
+        const products = {{ products|tojson }};
+        const username = "{{ username }}";  // Obtenha o nome de usuário da sessão
+
+        const productList = document.getElementById('productList');
+        products.forEach(product => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <strong><a href="/product/${product.id}">${product.name}</a></strong> - $${product.price} (ID: ${product.id})<br>
+                <em>${product.description}</em>
+                <button onclick="addToCart('${product.id}')">Add to Cart</button>
+            `;
+            productList.appendChild(li);
+        });
+
+        // Função para adicionar ao carrinho
+        function addToCart(productId) {
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,  // Nome de usuário da sessão
+                    product_id: productId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert(data.message);
+                } else if (data.error) {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

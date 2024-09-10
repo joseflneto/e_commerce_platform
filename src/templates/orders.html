@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Orders</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <a href="/" class="back-to-home-button">Back to Home</a>
+    <h1>Your Orders</h1>
+    {% if orders %}
+    <ul>
+        {% for order in orders %}
+        <li>
+            <h2>Order ID: {{ loop.index }}</h2>
+            <ul>
+                {% for product_id in order.products %}
+                <li class="order-item">{{ product_id }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>You have no orders yet.</p>
+    {% endif %}
+
+    <a href="/products" class="continue-shopping-button">Continue Shopping</a>
+</body>
+</html>
