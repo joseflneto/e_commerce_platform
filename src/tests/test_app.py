@@ -1,6 +1,8 @@
 import unittest
 import json
-from app import app, hash_password, load_data, save_data, create_default_admin, USERS_FILE, PRODUCTS_FILE
+from app import app
+from utils.utils import hash_password, load_data, save_data, create_default_admin
+from routes.routes import USERS_FILE, PRODUCTS_FILE
 
 class TestLogin(unittest.TestCase):
 
