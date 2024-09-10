@@ -106,7 +106,7 @@ def product_detail(product_id):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        data = request.form  # Mudança para request.form, pois estamos lidando com HTML forms
+        data = request.form
         username = data.get('username')
         password = data.get('password')
         if username and password:
