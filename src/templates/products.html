@@ -10,16 +10,13 @@
     <a href="/" class="back-to-home-button">Back to Home</a>
     <h1>Products</h1>
     <ul id="productList">
-        <!-- Os produtos serão carregados aqui via JavaScript -->
     </ul>
 
-    <!-- Botão para ver o carrinho -->
     <a href="/cart?username={{ username }}">Go to Cart</a>
 
     <script>
-        // Carregar produtos
         const products = {{ products|tojson }};
-        const username = "{{ username }}";  // Obtenha o nome de usuário da sessão
+        const username = "{{ username }}";  
 
         const productList = document.getElementById('productList');
         products.forEach(product => {
@@ -32,7 +29,6 @@
             productList.appendChild(li);
         });
 
-        // Função para adicionar ao carrinho
         function addToCart(productId) {
             fetch('/add_to_cart', {
                 method: 'POST',
@@ -40,7 +36,7 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: username,  // Nome de usuário da sessão
+                    username: username,
                     product_id: productId
                 })
             })
