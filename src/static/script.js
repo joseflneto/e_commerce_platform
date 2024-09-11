@@ -104,6 +104,20 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage(result.error, true);
         }
     });
+
+    document.getElementById('removeProductForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const productId = document.getElementById('productId').value;
+    
+        const response = await fetch('/remove_product', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({product_id: productId})
+        });
+    
+        const result = await response.json();
+        alert(result.message || result.error);
+    });
 });
 
 document.addEventListener('DOMContentLoaded', function () {

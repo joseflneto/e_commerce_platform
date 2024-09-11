@@ -3,14 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Place Order</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="../static/style.css"> <!-- Link to your CSS file -->
 </head>
-<body>
+<body class="order-body">
+    <div class="order-container">
+        <div class="order-title">Order #{{ order_id }}</div>
+        <div class="order-items">
+            {% if order_items %}
+                {% for item in order_items %}
+                    <div class="order-item">
+                        <span class="product-name">{{ item.name }}</span>
+                        <span class="product-price">${{ item.price }}</span>
+                        <span class="product-quantity">x{{ item.count }}</span>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No products in this order.</p>
+            {% endif %}
+        </div>
+        <div class="order-total">Total: ${{ total }}</div>
+    </div>
     <a href="/" class="back-to-home-button">Back to Home</a>
-    <h1>Place Order</h1>
-    <button id="placeOrderButton">Place Order</button>
-
-    <script src="/static/script.js"></script>
 </body>
 </html>

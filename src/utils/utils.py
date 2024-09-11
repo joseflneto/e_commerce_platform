@@ -49,6 +49,27 @@ def add_to_cart(username, product_id):
     carts[username] = cart
     save_data(CARTS_FILE, carts)
 
+
+def get_product_price(product_id, products):
+    for product in products:
+        if product['id'] == product_id:
+            return float(product.get('price', 0))
+    return 0.0
+
+
+def load_orders():
+    try:
+        with open(ORDERS_FILE, 'r') as file:
+            data = json.load(file)
+            if isinstance(data, dict):
+                return data
+            else:
+                print("Error: orders.json should be a dictionary of orders.")
+                return {}
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading orders: {e}")
+        return {}
+
 def place_order(username):
     carts = load_data(CARTS_FILE)
     orders = load_data(ORDERS_FILE)
@@ -56,11 +77,21 @@ def place_order(username):
     if not cart:
         return "Cart is empty"
     
-    order_id = len(orders) + 1
-    orders[order_id] = {'username': username, 'products': cart}
+    # Count occurrences of each product
+    product_counts = {}
+    for product_id in cart:
+        if product_id in product_counts:
+            product_counts[product_id] += 1
+        else:
+            product_counts[product_id] = 1
+    
+    # Create order entry with product counts
+    order_id = str(len(orders) + 1)
+    orders[order_id] = {'username': username, 'products': product_counts}
+    
     save_data(ORDERS_FILE, orders)
     
-    # Limpar o carrinho após o pedido
+    # Clear the cart after placing the order
     carts[username] = []
     save_data(CARTS_FILE, carts)
     

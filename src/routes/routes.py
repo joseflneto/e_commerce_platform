@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, render_template, session, redirect
+from flask import Blueprint, request, jsonify, render_template, session, redirect, url_for
 from utils.utils import (
     load_data,
     save_data,
@@ -7,6 +7,8 @@ from utils.utils import (
     get_products,
     add_to_cart,
     place_order,
+    load_orders,
+    get_product_price,
     clear_all_files
 )
 
@@ -117,13 +119,41 @@ def add_to_cart_route():
 def place_order_route():
     if 'username' not in session:
         return jsonify({'error': 'You must be logged in to place an order'}), 401
-
-    username = session['username']
+    
+    username = session['username']  # Get the username from the session
     order_id = place_order(username)
-    if isinstance(order_id, int):
-        return jsonify({'order_id': order_id}), 200
+
+    if isinstance(order_id, str):
+        # Redirect to the order screen for the newly created order
+        return redirect(url_for('routes.get_order', order_id=order_id))
     else:
         return jsonify({'error': order_id}), 400
+    
+
+@routes.route('/order/<order_id>', methods=['GET'])
+def get_order(order_id):
+    orders = load_orders()
+    products = get_products()  # Assume this returns a list of products
+    
+    current_username = session.get('username', None)
+    if order_id in orders:
+        order = orders[order_id]
+        if order.get('username') == current_username:
+            total = 0
+            order_items = []
+            
+            for product_id, count in order['products'].items():
+                price = get_product_price(product_id, products)
+                total += price * count
+                order_items.append({
+                    'id': product_id,
+                    'name': next((p['name'] for p in products if p['id'] == product_id), 'Unknown'),
+                    'price': price,
+                    'count': count
+                })
+            
+            return render_template('order.html', order_items=order_items, order_id=order_id, total=total)
+    
 
 @routes.route('/clear_all', methods=['POST'])
 def clear_all_route():
